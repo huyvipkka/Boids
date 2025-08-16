@@ -1,9 +1,11 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BoidScript : MonoBehaviour
 {
     public Vector2 Position => transform.position;
-    public Vector2 Velocity { get; private set; }
+    public Vector2 Velocity;
+    public List<Vector2> history = new List<Vector2>();
 
     [SerializeField] BoidSettings settings;
 
@@ -14,8 +16,7 @@ public class BoidScript : MonoBehaviour
 
     public void ApplyForce(Vector2 force)
     {
-        force = Vector2.ClampMagnitude(force, settings.maxSteerForce);
-        Velocity += force * Time.fixedDeltaTime;
+        Velocity += force * Time.deltaTime;
         LimitSpeed();
         Move();
     }
@@ -29,20 +30,23 @@ public class BoidScript : MonoBehaviour
             Velocity = Velocity.normalized * settings.maxSpeed;
     }
 
-    void Move()
-    {
-        transform.position += (Vector3)(Velocity * Time.fixedDeltaTime);
 
-        if (Velocity.sqrMagnitude != 0)
-        {
-            float angle = Mathf.Atan2(Velocity.y, Velocity.x) * Mathf.Rad2Deg - 90;
-            transform.rotation = Quaternion.Slerp(
-                transform.rotation,
-                Quaternion.Euler(0f, 0f, angle),
-                1f * Time.fixedDeltaTime
-            );
-        }
+public void Move()
+{
+    transform.position += (Vector3)Velocity * Time.deltaTime;
+
+    // lưu lại lịch sử để debug / trail
+    history.Add(transform.position);
+    if (history.Count > 50)
+        history.RemoveAt(0);
+
+    // quay theo hướng bay
+    if (Velocity != Vector2.zero)
+    {
+        float angle = Mathf.Atan2(Velocity.y, Velocity.x) * Mathf.Rad2Deg - 90;
+        transform.rotation = Quaternion.Euler(0, 0, angle);
     }
+}
     void OnDrawGizmosSelected()
     {
         if (settings == null) return;

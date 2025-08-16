@@ -7,9 +7,9 @@ public class BoidBoundary : MonoBehaviour
     [Header("Boundary Settings")]
     public float boundaryRadius = 30f;
     public float maxBoundaryWeight = 0.5f;
-    [Range(0f, 1f)] public float innerRadiusFactor = 0.5f;
     // boid trong vùng này thì không chịu lực
-
+    [Range(0f, 1f)] public float innerRadiusFactor = 0.5f;
+    
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -35,6 +35,7 @@ public class BoidBoundary : MonoBehaviour
         return toCenter.normalized * (t * maxBoundaryWeight);
     }
 
+    
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.cyan;

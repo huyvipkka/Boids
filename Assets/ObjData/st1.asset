@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: st1
   m_EditorClassIdentifier: 
   separationRange: 2
-  alignmentRange: 4
-  cohesionRange: 3.5
+  alignmentRange: 5
+  cohesionRange: 5
   minSpeed: 2
-  maxSpeed: 4
+  maxSpeed: 6
   maxSteerForce: 4
-  separationWeight: 1.5
-  alignWeight: 1
-  cohesionWeight: 1
-  turnFactor: 1
+  separationWeight: 0.05
+  alignWeight: 0.05
+  cohesionWeight: 0.005
+  BoundWeight: 19
