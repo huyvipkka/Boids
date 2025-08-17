@@ -73,7 +73,7 @@ public class BoidManager : MonoBehaviour
             if (alignment != Vector2.zero && alignCount > 0) alignment = alignment / alignCount - boid.Velocity;
             if (cohesionCount > 0) cohesion = cohesion / cohesionCount - boid.Position;
             // Tổng hợp các lực với trọng số
-            Vector2 force = boid.Velocity;
+            Vector2 force = Vector2.zero;
             if (separation != Vector2.zero) force += separation * settings.separationWeight;
             if (alignment != Vector2.zero)  force += alignment * settings.alignWeight;
             if (cohesion != Vector2.zero)   force += cohesion * settings.cohesionWeight;

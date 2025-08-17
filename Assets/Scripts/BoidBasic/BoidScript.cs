@@ -5,19 +5,20 @@ public class BoidScript : MonoBehaviour
 {
     public Vector2 Position => transform.position;
     public Vector2 Velocity;
-    public List<Vector2> history = new List<Vector2>();
 
     [SerializeField] BoidSettings settings;
 
     void Start()
     {
-        Velocity = transform.up * settings.minSpeed;
+        Velocity = transform.right * settings.minSpeed;
     }
 
     public void ApplyForce(Vector2 force)
     {
-        Velocity += force * Time.deltaTime;
+        Debug.Log(force.magnitude);
+        Velocity += force * Time.fixedDeltaTime;
         LimitSpeed();
+        LookRotation();
         Move();
     }
 
@@ -31,22 +32,16 @@ public class BoidScript : MonoBehaviour
     }
 
 
-public void Move()
-{
-    transform.position += (Vector3)Velocity * Time.deltaTime;
-
-    // lưu lại lịch sử để debug / trail
-    history.Add(transform.position);
-    if (history.Count > 50)
-        history.RemoveAt(0);
-
-    // quay theo hướng bay
-    if (Velocity != Vector2.zero)
+    public void Move()
     {
-        float angle = Mathf.Atan2(Velocity.y, Velocity.x) * Mathf.Rad2Deg - 90;
-        transform.rotation = Quaternion.Euler(0, 0, angle);
+        transform.position += (Vector3)Velocity * Time.fixedDeltaTime;
     }
-}
+
+    void LookRotation()
+    {
+        transform.rotation = Quaternion.Slerp(transform.localRotation,
+            Quaternion.LookRotation(Velocity), Time.fixedDeltaTime);
+    }
     void OnDrawGizmosSelected()
     {
         if (settings == null) return;

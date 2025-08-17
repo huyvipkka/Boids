@@ -16,9 +16,9 @@ public class BoidSettings : ScriptableObject
     [SerializeField] public float maxSteerForce = 4f;
 
     [Header("Hệ số các quy tắc")]
-    [Range(0, 0.1f)] public float separationWeight = 0.05f;
-    [Range(0, 0.1f)] public float alignWeight = 0.05f;
-    [Range(0, 0.1f)] public float cohesionWeight = 0.005f;
+    [Range(0, 1f)] public float separationWeight = 0.05f;
+    [Range(0, 1f)] public float alignWeight = 0.05f;
+    [Range(0, 1f)] public float cohesionWeight = 0.005f;
     [Range(1, 100)] public int BoundWeight = 10;
 
 }

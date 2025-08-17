@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ba872a9be4bdd8489e34eeba8806200, type: 3}
   m_Name: st1
   m_EditorClassIdentifier: 
-  separationRange: 2
+  separationRange: 4
   alignmentRange: 5
   cohesionRange: 5
-  minSpeed: 2
+  minSpeed: 3
   maxSpeed: 6
-  maxSteerForce: 4
-  separationWeight: 0.05
-  alignWeight: 0.05
-  cohesionWeight: 0.005
-  BoundWeight: 19
+  maxSteerForce: 6
+  separationWeight: 1
+  alignWeight: 0.8
+  cohesionWeight: 0.5
+  BoundWeight: 10

@@ -1,10 +1,9 @@
 using UnityEngine;
 
-public class CameraBounds
+public class CameraBounds : MonoBehaviour
 {
     private Camera cam;
     private float margin;
-    private float turnFactor;
 
     public CameraBounds(Camera cam, float margin = 5f)
     {
@@ -26,7 +25,7 @@ public Vector2 KeepWithinBounds(Vector2 pos)
     return direction.normalized;
 }
 
-    public void DrawBoundsGizmos()
+    public void OnDrawGizmos()
     {
         Vector2 min = cam.ViewportToWorldPoint(new Vector3(0, 0));
         Vector2 max = cam.ViewportToWorldPoint(new Vector3(1, 1));
