@@ -25,12 +25,15 @@ public Vector2 KeepWithinBounds(Vector2 pos)
     return direction.normalized;
 }
 
-    public void OnDrawGizmos()
+    public void DrawGizmos()
     {
         Vector2 min = cam.ViewportToWorldPoint(new Vector3(0, 0));
         Vector2 max = cam.ViewportToWorldPoint(new Vector3(1, 1));
 
-        Gizmos.color = Color.green;
+        min += Vector2.one * margin;
+        max -= Vector2.one * margin;
+
+        Gizmos.color = Color.red;
         Gizmos.DrawWireCube((min + max) / 2f, max - min);
     }
 }

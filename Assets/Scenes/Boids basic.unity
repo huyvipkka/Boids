@@ -286,8 +286,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e158a37fdd642046a8627f90f729ad7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boidCount: 100
-  boidPrefab: {fileID: 3288929687658145297, guid: 5f9900bace13ab441a2e86d6204d303d, type: 3}
+  boidCount: 180
+  boidPrefab: {fileID: 6353841655900851315, guid: cd86ef3c652962c4d87a836e5ac1c224, type: 3}
   settings: {fileID: 11400000, guid: 653487933315603479dcb7c343cb8e60, type: 2}
   listBoid: []
 --- !u!1660057539 &9223372036854775807

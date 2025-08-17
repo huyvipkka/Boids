@@ -5,13 +5,7 @@ public class BoidScript : MonoBehaviour
 {
     public Vector2 Position => transform.position;
     public Vector2 Velocity;
-
     [SerializeField] BoidSettings settings;
-
-    void Start()
-    {
-        Velocity = transform.right * settings.minSpeed;
-    }
 
     public void ApplyForce(Vector2 force)
     {
@@ -40,7 +34,7 @@ public class BoidScript : MonoBehaviour
     void LookRotation()
     {
         transform.rotation = Quaternion.Slerp(transform.localRotation,
-            Quaternion.LookRotation(Velocity), Time.fixedDeltaTime);
+            Quaternion.LookRotation(Velocity), 0.3f);
     }
     void OnDrawGizmosSelected()
     {

@@ -85,23 +85,9 @@ public class BoidManager : MonoBehaviour
 
     void SpawnOnCircle()
     {
-        // for (int i = 0; i < boidCount; i++)
-        // {
-        //     float angle = UnityEngine.Random.Range(0f, Mathf.PI * 2f);
-        //     Vector2 dir = new(Mathf.Cos(angle), Mathf.Sin(angle));
-        //     Vector2 pos2D = dir * spawnRadius;
-
-        //     float angleDeg = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 90f;
-        //     Quaternion rotation = Quaternion.Euler(0f, 0f, angleDeg);
-
-        //     GameObject boidObj = Instantiate(boidPrefab, pos2D, rotation);
-        //     BoidScript boidScript = boidObj.GetComponent<BoidScript>();
-        //     listBoid.Add(boidScript);
-        // }
-
         for (int i = 0; i < boidCount; i++)
         {
-            Vector2 pos = UnityEngine.Random.insideUnitCircle * 5f;
+            Vector2 pos = UnityEngine.Random.insideUnitCircle * 10f;
             GameObject obj = Instantiate(boidPrefab, pos, Quaternion.identity);
             BoidScript b = obj.GetComponent<BoidScript>();
             b.Velocity = UnityEngine.Random.insideUnitCircle * 2f;

@@ -1,0 +1,71 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class SpatialHash<T>
+{
+    private float cellSize;
+    private readonly Func<T, Vector2> getPosition;
+    private readonly Dictionary<Vector2Int, List<T>> cells;
+
+    public SpatialHash(float cellSize, Func<T, Vector2> getPosition)
+    {
+        this.cellSize = cellSize;
+        this.getPosition = getPosition;
+        cells = new Dictionary<Vector2Int, List<T>>();
+    }
+
+    private Vector2Int Hash(Vector2 pos)
+    {
+        return new Vector2Int(
+            Mathf.FloorToInt(pos.x / cellSize),
+            Mathf.FloorToInt(pos.y / cellSize)
+        );
+    }
+
+    public void Clear()
+    {
+        cells.Clear();
+    }
+
+    public void Insert(T item)
+    {
+        Vector2Int cell = Hash(getPosition(item));
+        if (!cells.TryGetValue(cell, out var list))
+        {
+            list = new List<T>();
+            cells[cell] = list;
+        }
+        list.Add(item);
+    }
+
+    public IEnumerable<T> GetNeighbors(Vector2 pos)
+    {
+        Vector2Int center = Hash(pos);
+            for (int dx = -1; dx <= 1; dx++)
+            {
+                for (int dy = -1; dy <= 1; dy++)
+                {
+                    Vector2Int neighborCell = new(center.x + dx, center.y + dy);
+                    if (cells.TryGetValue(neighborCell, out var list))
+                    {
+                        foreach (var item in list)
+                            yield return item;
+                    }
+                }
+            }
+    }
+
+    public void DrawGizmos()
+    {
+
+        Gizmos.color = Color.green;
+        foreach (var k in cells) 
+        {
+            Vector2Int cell = k.Key;
+            Vector3 worldPos = new(cell.x * cellSize, cell.y * cellSize, 0);
+            Vector3 size = new(cellSize, cellSize, 0);
+            Gizmos.DrawWireCube(worldPos + size * 0.5f, size);
+        }
+    }
+}
