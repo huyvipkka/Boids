@@ -49,7 +49,7 @@ public class BoidManager : MonoBehaviour
                 float dist = Vector2.Distance(boid.Position, other.Position);
                 if (dist < settings.separationRange && dist > 0f)
                 {
-                    separation += (Vector2)(boid.transform.position - other.transform.position);
+                    separation += (boid.Position - other.Position) / dist;
                     sepCount++;
                 }
 
@@ -69,16 +69,16 @@ public class BoidManager : MonoBehaviour
             }
 
 
-            if (sepCount > 0) separation = separation.normalized;
-            if (alignment != Vector2.zero && alignCount > 0) alignment = alignment / alignCount - boid.Velocity;
+            if (sepCount > 0) separation /= sepCount;
+            if (alignCount > 0) alignment /= alignCount;
             if (cohesionCount > 0) cohesion = cohesion / cohesionCount - boid.Position;
-            // Tổng hợp các lực với trọng số
+            
             Vector2 force = Vector2.zero;
             if (separation != Vector2.zero) force += separation * settings.separationWeight;
-            if (alignment != Vector2.zero)  force += alignment * settings.alignWeight;
-            if (cohesion != Vector2.zero)   force += cohesion * settings.cohesionWeight;
+            if (alignment != Vector2.zero) force += alignment * settings.alignWeight;
+            if (cohesion != Vector2.zero) force += cohesion * settings.cohesionWeight;
             force += cameraBounds.KeepWithinBounds(boid.Position) * settings.BoundWeight;
-            
+
             boid.ApplyForce(force);
         }
     }
@@ -93,5 +93,10 @@ public class BoidManager : MonoBehaviour
             b.Velocity = UnityEngine.Random.insideUnitCircle * 2f;
             listBoid.Add(b);
         }
+    }
+
+    void OnDrawGizmos()
+    {
+        cameraBounds.DrawGizmos();
     }
 }

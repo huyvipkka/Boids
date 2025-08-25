@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: BoidSettings
   m_EditorClassIdentifier: 
   separationRange: 3
-  alignmentRange: 4
+  alignmentRange: 5
   cohesionRange: 4
-  minSpeed: 5
-  maxSpeed: 8
+  minSpeed: 3
+  maxSpeed: 5
   maxSteerForce: 3
   separationWeight: 2
   alignWeight: 0.6
   cohesionWeight: 0.3
-  BoundWeight: 5
+  BoundWeight: 7

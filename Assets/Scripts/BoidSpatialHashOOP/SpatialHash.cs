@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SpatialHash<T>
 {
-    private float cellSize;
+    public float cellSize { get; set; }
     private readonly Func<T, Vector2> getPosition;
     private readonly Dictionary<Vector2Int, List<T>> cells;
 

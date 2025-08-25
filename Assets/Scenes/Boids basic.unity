@@ -180,7 +180,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 20
+  orthographic size: 15
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -220,6 +220,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 570525172}
+  - component: {fileID: 570525173}
   m_Layer: 0
   m_Name: Boundary
   m_TagString: Untagged
@@ -242,6 +243,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &570525173
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 570525171}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7126029cddfff443be266c55d9569f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1775746423
 GameObject:
   m_ObjectHideFlags: 0
@@ -286,7 +299,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e158a37fdd642046a8627f90f729ad7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boidCount: 180
+  boidCount: 20
   boidPrefab: {fileID: 6353841655900851315, guid: cd86ef3c652962c4d87a836e5ac1c224, type: 3}
   settings: {fileID: 11400000, guid: 653487933315603479dcb7c343cb8e60, type: 2}
   listBoid: []

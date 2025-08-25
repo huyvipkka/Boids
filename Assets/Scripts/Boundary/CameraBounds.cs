@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class CameraBounds : MonoBehaviour
 {
-    private Camera cam;
-    private float margin;
+    private readonly Camera cam;
+    private readonly float margin;
 
     public CameraBounds(Camera cam, float margin = 5f)
     {

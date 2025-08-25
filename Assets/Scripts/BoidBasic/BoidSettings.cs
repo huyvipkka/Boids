@@ -4,13 +4,13 @@ using UnityEngine;
 public class BoidSettings : ScriptableObject
 {
     [Header("Phạm vi quan sát")]
-    [Range(1f, 4f)] public float separationRange = 2f;
-    [Range(2f, 6f)] public float alignmentRange = 5f;
-    [Range(2f, 6f)] public float cohesionRange = 5f;
+    [Range(1f, 10f)] public float separationRange = 2f;
+    [Range(1f, 10f)] public float alignmentRange = 5f;
+    [Range(1f, 10f)] public float cohesionRange = 5f;
 
     [Header("Tốc độ")]
     [Range(1, 7)] public float minSpeed = 2f;
-    [Range(7, 15)] public float maxSpeed = 6f;
+    [Range(2, 15)] public float maxSpeed = 6f;
 
     [Header("Lực tác dụng tối đa lên boid")]
     [SerializeField] public float maxSteerForce = 4f;

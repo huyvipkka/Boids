@@ -28,14 +28,16 @@ public class BoidHashManager : MonoBehaviour
     {
         cameraBounds = new CameraBounds(Camera.main, 5f);
         listBoid = new List<BoidScript>(boidCount);
-
-        float cellSize = Mathf.Max(boidSettings.separationRange, boidSettings.alignmentRange, boidSettings.cohesionRange);
-        spatialHash = new SpatialHash<BoidScript>(cellSize, b => b.Position);
+        spatialHash = new SpatialHash<BoidScript>(5, b => b.Position);
         SpawnBoids();
     }
 
     void FixedUpdate()
     {
+        float cellSize = Mathf.Max( boidSettings.separationRange,
+                                    boidSettings.alignmentRange,
+                                    boidSettings.cohesionRange);
+        spatialHash.cellSize = cellSize;
         spatialHash.Clear();
         foreach (var boid in listBoid)
             spatialHash.Insert(boid);
@@ -47,7 +49,6 @@ public class BoidHashManager : MonoBehaviour
             Vector2 cohesion = Vector2.zero;
             int sepCount = 0, alignCount = 0, cohesionCount = 0;
 
-            // chỉ lấy boid trong phạm vi cell lân cận
             foreach (BoidScript other in spatialHash.GetNeighbors(boid.Position))
             {
                 if (other == boid) continue;
@@ -55,7 +56,7 @@ public class BoidHashManager : MonoBehaviour
 
                 if (dist < boidSettings.separationRange && dist > 0f)
                 {
-                    separation += (boid.Position - other.Position).normalized;
+                    separation += (boid.Position - other.Position) / dist;
                     sepCount++;
                 }
                 if (dist < boidSettings.alignmentRange)
@@ -71,7 +72,7 @@ public class BoidHashManager : MonoBehaviour
             }
 
             if (sepCount > 0) separation /= sepCount;
-            if (alignCount > 0) alignment = (alignment / alignCount) - boid.Velocity;
+            if (alignCount > 0) alignment /= alignCount;
             if (cohesionCount > 0) cohesion = (cohesion / cohesionCount) - boid.Position;
 
             Vector2 force = Vector2.zero;

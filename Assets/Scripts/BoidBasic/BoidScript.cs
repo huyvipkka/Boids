@@ -9,7 +9,7 @@ public class BoidScript : MonoBehaviour
 
     public void ApplyForce(Vector2 force)
     {
-        Debug.Log(force.magnitude);
+
         Velocity += force * Time.fixedDeltaTime;
         LimitSpeed();
         LookRotation();
@@ -33,8 +33,14 @@ public class BoidScript : MonoBehaviour
 
     void LookRotation()
     {
-        transform.rotation = Quaternion.Slerp(transform.localRotation,
-            Quaternion.LookRotation(Velocity), 0.3f);
+        // float angle = Mathf.Atan2(Velocity.y, Velocity.x) * Mathf.Rad2Deg - 90;
+        // transform.rotation = Quaternion.Euler(0, 0, angle);
+
+        transform.rotation = Quaternion.Slerp(
+                    transform.rotation,
+                    Quaternion.LookRotation(Velocity),
+                    5f * Time.fixedDeltaTime
+                );
     }
     void OnDrawGizmosSelected()
     {
