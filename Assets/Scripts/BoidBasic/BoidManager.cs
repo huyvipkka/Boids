@@ -28,7 +28,8 @@ public class BoidManager : MonoBehaviour
 
     void Start()
     {
-        cameraBounds = new CameraBounds(Camera.main, 5f);
+        cameraBounds = gameObject.AddComponent<CameraBounds>();
+        cameraBounds.Initialize(Camera.main, 5f);
         listBoid = new List<BoidScript>(boidCount);
         SpawnOnCircle();
     }

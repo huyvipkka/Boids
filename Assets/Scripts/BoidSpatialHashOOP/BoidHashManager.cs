@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class BoidHashManager : MonoBehaviour
 {
-    public static BoidHashManager Instance { get; private set; }
+    // public static BoidHashManager Instance { get; private set; }
 
     [Header("Boid Settings")]
     [SerializeField] int boidCount = 100;
@@ -14,19 +14,21 @@ public class BoidHashManager : MonoBehaviour
     private CameraBounds cameraBounds;
     private SpatialHash<BoidScript> spatialHash;
 
-    void Awake()
-    {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        Instance = this;
-    }
+    // void Awake()
+    // {
+    //     if (Instance != null && Instance != this)
+    //     {
+    //         Destroy(gameObject);
+    //         return;
+    //     }
+    //     Instance = this;
+    // }
 
     void Start()
     {
-        cameraBounds = new CameraBounds(Camera.main, 5f);
+        cameraBounds = gameObject.AddComponent<CameraBounds>();
+        cameraBounds.Initialize(Camera.main, 5f);
+
         listBoid = new List<BoidScript>(boidCount);
         spatialHash = new SpatialHash<BoidScript>(5, b => b.Position);
         SpawnBoids();

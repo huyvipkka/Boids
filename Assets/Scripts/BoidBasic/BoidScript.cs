@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BoidScript : MonoBehaviour
@@ -39,7 +38,7 @@ public class BoidScript : MonoBehaviour
         transform.rotation = Quaternion.Slerp(
                     transform.rotation,
                     Quaternion.LookRotation(Velocity),
-                    5f * Time.fixedDeltaTime
+                    3f * Time.fixedDeltaTime
                 );
     }
     void OnDrawGizmosSelected()
