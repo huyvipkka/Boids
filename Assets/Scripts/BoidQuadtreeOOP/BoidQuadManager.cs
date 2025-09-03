@@ -3,139 +3,125 @@ using UnityEngine;
 
 public class BoidQuadTreeManager : MonoBehaviour
 {
-    public static BoidQuadTreeManager Instance { get; private set; }
-
     [Header("Boid Settings")]
-    [SerializeField] int boidCount = 100;
+    [SerializeField] int boidCount = 20;
     [SerializeField] GameObject boidPrefab;
-    [SerializeField] BoidSettings boidSettings;
-    public Rect quadTreeBound;
+    [SerializeField] BoidSettings settings;
+
+    [Header("QuadTree Bounds")]
+    [SerializeField] bool useCustomBounds = false;
+    [SerializeField] Rect customBounds = new Rect(-20, -20, 40, 40);
 
     public List<BoidScript> listBoid;
     private CameraBounds cameraBounds;
-    private QuadTree quadTree;
-
-    void Awake()
-    {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        Instance = this;
-    }
+    private ObjectPool<QuadTree<BoidScript>> quadTreePool;
+    private QuadTree<BoidScript> root;
 
     void Start()
     {
+        listBoid = new List<BoidScript>(boidCount);
+        SpawnOnCircle();
+
+        quadTreePool = new ObjectPool<QuadTree<BoidScript>>(
+            () => new QuadTree<BoidScript>(b => b.Position), 50, 500
+        );
+
         cameraBounds = gameObject.AddComponent<CameraBounds>();
         cameraBounds.Initialize(Camera.main, 5f);
-
-        listBoid = new List<BoidScript>(boidCount);
-
-        quadTree = new QuadTree(quadTreeBound, capacity: 6, minSize: 1, maxDepth: 7);
-
-        SpawnBoids();
     }
 
-void FixedUpdate()
-{
-    // 1. Clear & build quadtree
-    quadTree.Clear();
-    for (int i = 0; i < listBoid.Count; i++)
-        quadTree.Insert(i, listBoid[i].Position);
-
-    // 2. Duyệt từng boid
-    for (int i = 0; i < listBoid.Count; i++)
+    void FixedUpdate()
     {
-        BoidScript boid = listBoid[i];
+        // 🔹 lấy bounds theo custom hay camera
+        Rect worldBounds = useCustomBounds
+            ? customBounds
+            : new Rect(-20, -20, 40, 40); // fallback nếu không có cameraBounds
 
-        Vector2 separation = Vector2.zero;
-        Vector2 alignment = Vector2.zero;
-        Vector2 cohesion = Vector2.zero;
-        int sepCount = 0, alignCount = 0, cohesionCount = 0;
 
-        // Query trong bounding box = max range
-        float queryRange = Mathf.Max(
-            boidSettings.separationRange,
-            boidSettings.alignmentRange,
-            boidSettings.cohesionRange
-        );
-
-        Rect range = new Rect(
-            boid.Position - Vector2.one * queryRange,
-            Vector2.one * queryRange * 2
-        );
-
-        // Dùng buffer chung để giảm GC
-        _neighborBuffer.Clear();
-        quadTree.QueryRange(range, _neighborBuffer);
-
-        foreach (int idx in _neighborBuffer)
+        root?.ReleaseAll(quadTreePool);
+        root = quadTreePool.Get().Init(worldBounds, 8, 3f, 0, 8);
+        foreach (BoidScript b in listBoid)
         {
-            if (idx == i) continue; // bỏ chính nó
-            BoidScript other = listBoid[idx];
-
-            float dist = Vector2.Distance(boid.Position, other.Position);
-
-            if (dist < boidSettings.separationRange && dist > 0f)
-            {
-                separation += (boid.Position - other.Position) / dist;
-                sepCount++;
-            }
-            if (dist < boidSettings.alignmentRange)
-            {
-                alignment += other.Velocity;
-                alignCount++;
-            }
-            if (dist < boidSettings.cohesionRange)
-            {
-                cohesion += other.Position;
-                cohesionCount++;
-            }
+            root.Insert(b, quadTreePool);
         }
 
-        // Chuẩn hoá
-        if (sepCount > 0) separation /= sepCount;
-        if (alignCount > 0) alignment /= alignCount;
-        if (cohesionCount > 0) cohesion = (cohesion / cohesionCount) - boid.Position;
-
-        // Tổng lực
-        Vector2 force = Vector2.zero;
-        if (sepCount > 0) force += separation * boidSettings.separationWeight;
-        if (alignCount > 0) force += alignment * boidSettings.alignWeight;
-        if (cohesionCount > 0) force += cohesion * boidSettings.cohesionWeight;
-
-        // Lực giữ trong camera
-        force += cameraBounds.KeepWithinBounds(boid.Position) * boidSettings.BoundWeight;
-
-        boid.ApplyForce(force);
-    }
-}
-
-// Buffer chung để tránh new List mỗi vòng
-private static readonly List<int> _neighborBuffer = new List<int>(256);
-
-    void SpawnBoids()
-    {
-        for (int i = 0; i < boidCount; i++)
+        // 🔹 2. Tính toán lực cho từng boid bằng cách query vùng lân cận
+        foreach (BoidScript boid in listBoid)
         {
-            Vector2 pos = Random.insideUnitCircle * 20f;
-            GameObject obj = Instantiate(boidPrefab, pos, Quaternion.identity);
-            BoidScript b = obj.GetComponent<BoidScript>();
-            b.Velocity = Random.insideUnitCircle * 2f;
-            listBoid.Add(b);
+            Vector2 separation = Vector2.zero;
+            Vector2 alignment = Vector2.zero;
+            Vector2 cohesion = Vector2.zero;
+            int sepCount = 0, alignCount = 0, cohesionCount = 0;
+
+            // Query neighbors trong quadtree
+            List<BoidScript> neighbors = new List<BoidScript>();
+            Rect queryRange = new Rect(
+                boid.Position.x - settings.cohesionRange,
+                boid.Position.y - settings.cohesionRange,
+                settings.cohesionRange * 2,
+                settings.cohesionRange * 2
+            );
+            root.QueryRange(queryRange, neighbors);
+
+            foreach (BoidScript other in neighbors)
+            {
+                if (other == boid) continue;
+
+                float dist = Vector2.Distance(boid.Position, other.Position);
+                if (dist < settings.separationRange && dist > 0f)
+                {
+                    separation += (boid.Position - other.Position) / dist;
+                    sepCount++;
+                }
+
+                if (dist < settings.alignmentRange)
+                {
+                    alignment += other.Velocity;
+                    alignCount++;
+                }
+
+                if (dist < settings.cohesionRange)
+                {
+                    cohesion += other.Position;
+                    cohesionCount++;
+                }
+            }
+
+            if (sepCount > 0) separation /= sepCount;
+            if (alignCount > 0) alignment /= alignCount;
+            if (cohesionCount > 0) cohesion = cohesion / cohesionCount - boid.Position;
+
+            Vector2 force = Vector2.zero;
+            if (separation != Vector2.zero) force += separation * settings.separationWeight;
+            if (alignment != Vector2.zero) force += alignment * settings.alignWeight;
+            if (cohesion != Vector2.zero) force += cohesion * settings.cohesionWeight;
+            force += cameraBounds.KeepWithinBounds(boid.Position) * settings.BoundWeight;
+
+            boid.ApplyForce(force);
         }
     }
 
     void OnDrawGizmos()
     {
-        if (quadTree != null)
+        if (useCustomBounds)
         {
-            quadTree.DrawGizmos();
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireCube(customBounds.center, customBounds.size);
         }
-        if (cameraBounds != null)
+        Debug.Log(root);
+        root?.DrawGizmos(Color.cyan);
+        cameraBounds?.DrawGizmos();
+    }
+
+    void SpawnOnCircle()
+    {
+        for (int i = 0; i < boidCount; i++)
         {
-            cameraBounds.DrawGizmos();
+            Vector2 pos = UnityEngine.Random.insideUnitCircle * 10f;
+            GameObject obj = Instantiate(boidPrefab, pos, Quaternion.identity);
+            BoidScript b = obj.GetComponent<BoidScript>();
+            b.Velocity = UnityEngine.Random.insideUnitCircle * 2f;
+            listBoid.Add(b);
         }
     }
 }

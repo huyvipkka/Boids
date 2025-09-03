@@ -101,7 +101,7 @@ public class BoidHashManager : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        spatialHash.DrawGizmos();
-        cameraBounds.DrawGizmos();
+        spatialHash?.DrawGizmos();
+        cameraBounds?.DrawGizmos();
     }
 }

@@ -98,6 +98,6 @@ public class BoidManager : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        cameraBounds.DrawGizmos();
+        cameraBounds?.DrawGizmos();
     }
 }
