@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class CameraBounds : MonoBehaviour
 {
-    private Camera cam;
+    public Camera cam { get; private set; }
     private float margin;
     private static Vector3 vt00 = new(0, 0);
     private static Vector3 vt11 = new(1, 1);
