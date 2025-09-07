@@ -9,7 +9,6 @@ public struct BoidJob : IJobParallelFor
     [ReadOnly] public NativeArray<float2> positions;
     [ReadOnly] public NativeArray<float2> velocities;
     public NativeArray<float2> forces;
-
     public BoidSettingsData settings;
 
     public void Execute(int index)

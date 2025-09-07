@@ -220,6 +220,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 183884165}
+  - component: {fileID: 183884166}
   m_Layer: 0
   m_Name: BoidManager
   m_TagString: Untagged
@@ -242,6 +243,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &183884166
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 183884164}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 996876008cc5f8b4e91298e354ab6600, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boidCount: 4000
+  boidPrefab: {fileID: 1401781204145003117, guid: 524dde6a7b73dfc4bb5c8141731b5748, type: 3}
+  settings: {fileID: 11400000, guid: 653487933315603479dcb7c343cb8e60, type: 2}
+  listBoid: []
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

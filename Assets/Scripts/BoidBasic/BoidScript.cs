@@ -3,16 +3,21 @@ using UnityEngine;
 public class BoidScript : MonoBehaviour
 {
     public Vector2 Position => transform.position;
-    public Vector2 Velocity;
+    public Vector2 Velocity = Vector2.left;
     [SerializeField] BoidSettings settings;
 
-    public void ApplyForce(Vector2 force)
+    void FixedUpdate()
     {
-
-        Velocity += force * Time.fixedDeltaTime;
         LimitSpeed();
         LookRotation();
         Move();
+    }
+
+    public void ApplyForce(Vector2 force)
+    {
+        float maxForce = Mathf.Min(settings.maxSteerForce, force.magnitude);
+        force = force.normalized * maxForce;
+        Velocity += force * Time.fixedDeltaTime;
     }
 
     void LimitSpeed()
@@ -32,14 +37,12 @@ public class BoidScript : MonoBehaviour
 
     void LookRotation()
     {
-        // float angle = Mathf.Atan2(Velocity.y, Velocity.x) * Mathf.Rad2Deg - 90;
-        // transform.rotation = Quaternion.Euler(0, 0, angle);
-
         transform.rotation = Quaternion.Slerp(
                     transform.rotation,
                     Quaternion.LookRotation(Velocity),
-                    3f * Time.fixedDeltaTime
+                    0.3f
                 );
+
     }
     void OnDrawGizmosSelected()
     {
