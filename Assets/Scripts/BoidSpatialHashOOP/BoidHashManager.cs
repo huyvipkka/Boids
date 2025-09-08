@@ -14,16 +14,6 @@ public class BoidHashManager : MonoBehaviour
     private CameraBounds cameraBounds;
     private SpatialHash<BoidScript> spatialHash;
 
-    // void Awake()
-    // {
-    //     if (Instance != null && Instance != this)
-    //     {
-    //         Destroy(gameObject);
-    //         return;
-    //     }
-    //     Instance = this;
-    // }
-
     void Start()
     {
         cameraBounds = gameObject.AddComponent<CameraBounds>();

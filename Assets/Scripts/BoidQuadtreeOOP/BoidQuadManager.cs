@@ -39,7 +39,7 @@ public class BoidQuadTreeManager : MonoBehaviour
 
 
         root?.ReleaseAll(quadTreePool);
-        root = quadTreePool.Get().Init(worldBounds, 8, 3f, 0, 8);
+        root = quadTreePool.Get().Init(worldBounds, 8, 1f, 0, 8);
         foreach (BoidScript b in listBoid)
         {
             root.Insert(b, quadTreePool);
@@ -117,7 +117,7 @@ public class BoidQuadTreeManager : MonoBehaviour
     {
         for (int i = 0; i < boidCount; i++)
         {
-            Vector2 pos = UnityEngine.Random.insideUnitCircle * 10f;
+            Vector2 pos = UnityEngine.Random.insideUnitCircle * 20f;
             GameObject obj = Instantiate(boidPrefab, pos, Quaternion.identity);
             BoidScript b = obj.GetComponent<BoidScript>();
             b.Velocity = UnityEngine.Random.insideUnitCircle * 2f;

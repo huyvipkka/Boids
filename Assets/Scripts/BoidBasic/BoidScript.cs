@@ -15,8 +15,8 @@ public class BoidScript : MonoBehaviour
 
     public void ApplyForce(Vector2 force)
     {
-        float maxForce = Mathf.Min(settings.maxSteerForce, force.magnitude);
-        force = force.normalized * maxForce;
+        if (force.magnitude > settings.maxSteerForce)
+            force = force.normalized * settings.maxSteerForce;
         Velocity += force * Time.fixedDeltaTime;
     }
 

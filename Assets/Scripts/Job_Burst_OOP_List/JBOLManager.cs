@@ -63,6 +63,7 @@ public class JBOLManager : MonoBehaviour
 
         for (int i = 0; i < listBoid.Count; i++)
         {
+            //Debug.Log(forces[i]);
             float2 boundForce = (float2)cameraBounds.KeepWithinBounds(listBoid[i].Position) * settings.BoundWeight;
             listBoid[i].ApplyForce(forces[i] + boundForce);
         }
@@ -73,7 +74,7 @@ public class JBOLManager : MonoBehaviour
     {
         for (int i = 0; i < boidCount; i++)
         {
-            Vector2 pos = UnityEngine.Random.insideUnitCircle * 10f;
+            Vector2 pos = UnityEngine.Random.insideUnitCircle * 30f;
             GameObject obj = Instantiate(boidPrefab, pos, Quaternion.identity);
             BoidScript b = obj.GetComponent<BoidScript>();
             b.Velocity = UnityEngine.Random.insideUnitCircle * 2f;
@@ -86,5 +87,14 @@ public class JBOLManager : MonoBehaviour
         if (positions.IsCreated) positions.Dispose();
         if (velocities.IsCreated) velocities.Dispose();
         if (forces.IsCreated) forces.Dispose();
+    }
+
+        void OnDrawGizmos()
+    {
+        if (Application.isPlaying)
+        {
+            cameraBounds?.DrawGizmos();
+        }
+
     }
 }

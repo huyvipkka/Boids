@@ -53,18 +53,18 @@ public struct BoidHashJob : IJobParallelFor
                     }
                     while (spatialMap.map.TryGetNextValue(out neighborIdx, ref it));
                 }
-                if (sepCount > 0) separation /= sepCount;
-                if (alignCount > 0) alignment /= alignCount;
-                if (cohesionCount > 0) cohesion = (cohesion / cohesionCount) - pos;
-
-                float2 force = float2.zero;
-                if (sepCount > 0) force += separation * settings.separationWeight;
-                if (alignCount > 0) force += alignment * settings.alignWeight;
-                if (cohesionCount > 0) force += cohesion * settings.cohesionWeight;
-
-                forces[index] = force;
             }
         }
+        if (sepCount > 0) separation /= sepCount;
+        if (alignCount > 0) alignment /= alignCount;
+        if (cohesionCount > 0) cohesion = (cohesion / cohesionCount) - pos;
+
+        float2 force = float2.zero;
+        if (sepCount > 0) force += separation * settings.separationWeight;
+        if (alignCount > 0) force += alignment * settings.alignWeight;
+        if (cohesionCount > 0) force += cohesion * settings.cohesionWeight;
+
+        forces[index] = force;
 
     }
 }

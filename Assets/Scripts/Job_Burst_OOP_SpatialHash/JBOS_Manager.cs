@@ -83,7 +83,7 @@ public class JBOS_Manager : MonoBehaviour
     {
         for (int i = 0; i < boidCount; i++)
         {
-            Vector2 pos = UnityEngine.Random.insideUnitCircle * 10f;
+            Vector2 pos = UnityEngine.Random.insideUnitCircle * 30f;
             GameObject obj = Instantiate(boidPrefab, pos, Quaternion.identity);
             BoidScript b = obj.GetComponent<BoidScript>();
             b.Velocity = UnityEngine.Random.insideUnitCircle * 2f;
