@@ -1,42 +1,27 @@
-using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Jobs;
 using Unity.Mathematics;
 using UnityEngine;
 
-public class JBOS_Manager : MonoBehaviour
+public class JBOS_Manager : BoidManager
 {
-    [SerializeField] int boidCount = 20;
-    [SerializeField] GameObject boidPrefab;
-    [SerializeField] BoidSettings settings;
-
-    public List<BoidScript> listBoid;
-    private CameraBounds cameraBounds;
-
     private NativeArray<float2> positions;
     private NativeArray<float2> velocities;
     private NativeArray<float2> forces;
     private NativeSpatialHash spatialHash;
 
-
-    void Start()
+    protected override void Start()
     {
-        cameraBounds = gameObject.AddComponent<CameraBounds>();
-        cameraBounds.Initialize(Camera.main, 5f);
+        base.Start();
 
-        listBoid = new List<BoidScript>(boidCount);
-        SpawnOnCircle();
-
-        positions = new NativeArray<float2>(boidCount, Allocator.Persistent);
-        velocities = new NativeArray<float2>(boidCount, Allocator.Persistent);
-        forces = new NativeArray<float2>(boidCount, Allocator.Persistent);
+        positions = new NativeArray<float2>(boidCount + 5000, Allocator.Persistent);
+        velocities = new NativeArray<float2>(boidCount + 5000, Allocator.Persistent);
+        forces = new NativeArray<float2>(boidCount + 5000, Allocator.Persistent);
         float cellSize = Mathf.Max(settings.separationRange, settings.alignmentRange, settings.cohesionRange);
         spatialHash = new(boidCount * 2, cellSize, Allocator.Persistent);
     }
-
-    void FixedUpdate()
+    protected override void CaculateBoids()
     {
-
         spatialHash.Clear();
         for (int i = 0; i < listBoid.Count; i++)
         {
@@ -65,7 +50,6 @@ public class JBOS_Manager : MonoBehaviour
             forces = forces,
             settings = settingsData,
             spatialMap = spatialHash
-
         };
 
         JobHandle handle = job.Schedule(listBoid.Count, 32);
@@ -79,18 +63,6 @@ public class JBOS_Manager : MonoBehaviour
     }
 
 
-    void SpawnOnCircle()
-    {
-        for (int i = 0; i < boidCount; i++)
-        {
-            Vector2 pos = UnityEngine.Random.insideUnitCircle * 30f;
-            GameObject obj = Instantiate(boidPrefab, pos, Quaternion.identity);
-            BoidScript b = obj.GetComponent<BoidScript>();
-            b.Velocity = UnityEngine.Random.insideUnitCircle * 2f;
-            listBoid.Add(b);
-        }
-    }
-
     void OnDestroy()
     {
         if (positions.IsCreated) positions.Dispose();
@@ -99,13 +71,12 @@ public class JBOS_Manager : MonoBehaviour
         spatialHash.Dispose();
     }
 
-    void OnDrawGizmos()
+    protected override void OnDrawGizmos()
     {
         if (Application.isPlaying)
         {
             spatialHash.DrawGizmos();
             cameraBounds?.DrawGizmos();
         }
-
     }
 }

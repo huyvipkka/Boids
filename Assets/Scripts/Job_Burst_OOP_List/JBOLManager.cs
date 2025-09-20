@@ -4,42 +4,27 @@ using Unity.Jobs;
 using Unity.Mathematics;
 using UnityEngine;
 
-public class JBOLManager : MonoBehaviour
+public class JBOLManager : BoidManager
 {
-    [SerializeField] int boidCount = 20;
-    [SerializeField] GameObject boidPrefab;
-    [SerializeField] BoidSettings settings;
-
-    public List<BoidScript> listBoid;
-    private CameraBounds cameraBounds;
-
     // NativeArrays để xử lý song song
     private NativeArray<float2> positions;
     private NativeArray<float2> velocities;
     private NativeArray<float2> forces;
-
-
-    void Start()
+    protected override void Start()
     {
-        cameraBounds = gameObject.AddComponent<CameraBounds>();
-        cameraBounds.Initialize(Camera.main, 5f);
-
-        listBoid = new List<BoidScript>(boidCount);
-        SpawnOnCircle();
+        base.Start();
 
         positions = new NativeArray<float2>(boidCount, Allocator.Persistent);
         velocities = new NativeArray<float2>(boidCount, Allocator.Persistent);
         forces = new NativeArray<float2>(boidCount, Allocator.Persistent);
     }
-
-    void FixedUpdate()
+    protected override void CaculateBoids()
     {
-        for (int i = 0; i < listBoid.Count; i++)
+         for (int i = 0; i < listBoid.Count; i++)
         {
             positions[i] = listBoid[i].Position;
             velocities[i] = listBoid[i].Velocity;
         }
-
         BoidSettingsData settingsData = new()
         {
             separationRange = settings.separationRange,
@@ -49,7 +34,6 @@ public class JBOLManager : MonoBehaviour
             alignWeight = settings.alignWeight,
             cohesionWeight = settings.cohesionWeight
         };
-
         BoidJob job = new()
         {
             positions = positions,
@@ -57,10 +41,8 @@ public class JBOLManager : MonoBehaviour
             forces = forces,
             settings = settingsData
         };
-
         JobHandle handle = job.Schedule(listBoid.Count, 32);
         handle.Complete();
-
         for (int i = 0; i < listBoid.Count; i++)
         {
             //Debug.Log(forces[i]);
@@ -68,33 +50,10 @@ public class JBOLManager : MonoBehaviour
             listBoid[i].ApplyForce(forces[i] + boundForce);
         }
     }
-
-
-    void SpawnOnCircle()
-    {
-        for (int i = 0; i < boidCount; i++)
-        {
-            Vector2 pos = UnityEngine.Random.insideUnitCircle * 30f;
-            GameObject obj = Instantiate(boidPrefab, pos, Quaternion.identity);
-            BoidScript b = obj.GetComponent<BoidScript>();
-            b.Velocity = UnityEngine.Random.insideUnitCircle * 2f;
-            listBoid.Add(b);
-        }
-    }
-
     void OnDestroy()
     {
         if (positions.IsCreated) positions.Dispose();
         if (velocities.IsCreated) velocities.Dispose();
         if (forces.IsCreated) forces.Dispose();
-    }
-
-        void OnDrawGizmos()
-    {
-        if (Application.isPlaying)
-        {
-            cameraBounds?.DrawGizmos();
-        }
-
     }
 }

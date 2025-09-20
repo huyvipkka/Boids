@@ -9,11 +9,9 @@ public class QuadTree<T>
     private float _minSize;
     private int _depth;
     private int _maxDepth;
-
     private QuadTree<T>[] _children;
     private List<T> _objects;
     public bool IsDivided => _children != null;
-
     private Func<T, Vector2> getPosition;
     public QuadTree()
     {
@@ -45,7 +43,6 @@ public class QuadTree<T>
         _minSize = minSize;
         _depth = depth;
         _maxDepth = maxDepth;
-
         _children = null;
         _objects.Clear();
         return this;
@@ -61,7 +58,6 @@ public class QuadTree<T>
             _objects.Add(item);
             return true;
         }
-
         // chia node nếu cần
         if (!IsDivided && _depth < _maxDepth)
             Subdivide(pool);
@@ -74,9 +70,6 @@ public class QuadTree<T>
                     return true;
             }
         }
-
-        // fallback: giữ lại tại node hiện tại
-        _objects.Add(item);
         return true;
     }
     private void Subdivide(ObjectPool<QuadTree<T>> pool)

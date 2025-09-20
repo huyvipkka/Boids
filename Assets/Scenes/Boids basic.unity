@@ -312,10 +312,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e158a37fdd642046a8627f90f729ad7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boidCount: 300
+  boidCount: 50
   boidPrefab: {fileID: 1401781204145003117, guid: 524dde6a7b73dfc4bb5c8141731b5748, type: 3}
   settings: {fileID: 11400000, guid: 653487933315603479dcb7c343cb8e60, type: 2}
   listBoid: []
+  cameraBounds: {fileID: 0}
+  neighbors: []
+  force: {x: 0, y: 0}
 --- !u!1001 &1896427257
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -205,9 +205,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f495e9a10770be748a38e8022e89e4f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boidCount: 800
+  boidCount: 50
   boidPrefab: {fileID: 1401781204145003117, guid: 524dde6a7b73dfc4bb5c8141731b5748, type: 3}
   settings: {fileID: 11400000, guid: 653487933315603479dcb7c343cb8e60, type: 2}
+  listBoid: []
+  cameraBounds: {fileID: 0}
   useCustomBounds: 1
   customBounds:
     serializedVersion: 2
@@ -215,7 +217,6 @@ MonoBehaviour:
     y: -30
     width: 100
     height: 60
-  listBoid: []
 --- !u!4 &1456490195
 Transform:
   m_ObjectHideFlags: 0

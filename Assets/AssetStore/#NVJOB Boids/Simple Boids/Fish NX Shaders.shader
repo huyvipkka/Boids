@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2016 Unity Technologies. MIT license - license_unity.txt
+﻿﻿// Copyright (c) 2016 Unity Technologies. MIT license - license_unity.txt
 // #NVJOB Simple Boids. MIT license - license_nvjob.txt
 // #NVJOB NX Shaders. MIT license - license_nvjob.txt
 // #NVJOB Nicholas Veselov - https://nvjob.github.io

@@ -4,9 +4,7 @@ public class CameraBounds : MonoBehaviour
 {
     public Camera cam { get; private set; }
     private float margin;
-    private static Vector3 vt00 = new(0, 0);
-    private static Vector3 vt11 = new(1, 1);
-
+    private static Vector3 vt11 = new(1, 1, 0);
     public void Initialize(Camera cam, float margin = 5f)
     {
         this.cam = cam;
@@ -15,7 +13,7 @@ public class CameraBounds : MonoBehaviour
 
     public Vector2 KeepWithinBounds(Vector2 pos)
     {
-        Vector2 min = cam.ViewportToWorldPoint(vt00);
+        Vector2 min = cam.ViewportToWorldPoint(Vector3.zero);
         Vector2 max = cam.ViewportToWorldPoint(vt11);
         Vector2 direction = Vector2.zero;
 
@@ -26,10 +24,9 @@ public class CameraBounds : MonoBehaviour
 
         return direction.normalized;
     }
-
     public void DrawGizmos()
     {
-        Vector2 min = cam.ViewportToWorldPoint(vt00);
+        Vector2 min = cam.ViewportToWorldPoint(Vector3.zero);
         Vector2 max = cam.ViewportToWorldPoint(vt11);
 
         min += Vector2.one * margin;

@@ -20,5 +20,4 @@ public class BoidSettings : ScriptableObject
     [Range(0, 5f)] public float alignWeight = 0.05f;
     [Range(0, 5f)] public float cohesionWeight = 0.005f;
     [Range(0, 100)] public int BoundWeight = 10;
-
 }
