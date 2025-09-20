@@ -26,19 +26,16 @@ public struct BoidJob : IJobParallelFor
             if (j == index) continue;
             float2 otherPos = positions[j];
             float dist = math.distance(pos, otherPos);
-
-            if (dist < settings.separationRange && dist > 0f)
+            dist = math.max(0.01f, dist);
+            if (dist < settings.range)
             {
-                separation += (pos - otherPos) / dist;
+                float2 dir = math.normalize(pos - otherPos);
+                separation += dir * settings.range / dist;
                 sepCount++;
-            }
-            if (dist < settings.alignmentRange)
-            {
+
                 alignment += velocities[j];
                 alignCount++;
-            }
-            if (dist < settings.cohesionRange)
-            {
+
                 cohesion += otherPos;
                 cohesionCount++;
             }

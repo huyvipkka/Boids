@@ -17,10 +17,10 @@ public class JBOS_Manager : BoidManager
         positions = new NativeArray<float2>(boidCount + 5000, Allocator.Persistent);
         velocities = new NativeArray<float2>(boidCount + 5000, Allocator.Persistent);
         forces = new NativeArray<float2>(boidCount + 5000, Allocator.Persistent);
-        float cellSize = Mathf.Max(settings.separationRange, settings.alignmentRange, settings.cohesionRange);
+        float cellSize = settings.range;
         spatialHash = new(boidCount * 2, cellSize, Allocator.Persistent);
     }
-    protected override void CaculateBoids()
+    protected override void Update()
     {
         spatialHash.Clear();
         for (int i = 0; i < listBoid.Count; i++)
@@ -33,15 +33,12 @@ public class JBOS_Manager : BoidManager
 
         BoidSettingsData settingsData = new()
         {
-            separationRange = settings.separationRange,
-            alignmentRange = settings.alignmentRange,
-            cohesionRange = settings.cohesionRange,
+            range = settings.range,
             separationWeight = settings.separationWeight,
             alignWeight = settings.alignWeight,
             cohesionWeight = settings.cohesionWeight
         };
-        // float cellSize = Mathf.Max(settings.separationRange, settings.alignmentRange, settings.cohesionRange);
-        // spatialHash.cellSize = cellSize;
+        // spatialHash.cellSize = settings.range;
 
         BoidHashJob job = new()
         {

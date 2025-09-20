@@ -1,5 +1,0 @@
-0.83
-numBoid: 4200
-FPS Avg: 0.83
-FPS StdDev: 0.00
-

@@ -3,6 +3,7 @@ using System.IO;
 using System.Collections.Generic;
 using System;
 using UnityEngine.SceneManagement;
+using System.Linq;
 
 public class FPSLogger : MonoBehaviour
 {
@@ -19,7 +20,6 @@ public class FPSLogger : MonoBehaviour
     private string fileName;
     private static int runIndex = 1; // số thứ tự file log
 
-    // Tham chiếu tới Manager
     public BoidManager manager;
 
     void Start()
@@ -42,14 +42,11 @@ public class FPSLogger : MonoBehaviour
 
     void Update()
     {
-        // Nếu còn trong thời gian warmup thì chỉ trừ thời gian và bỏ qua
         if (warmupTimer > 0f)
         {
             warmupTimer -= Time.unscaledDeltaTime;
             return;
         }
-
-        // Đếm frame và cộng dồn thời gian
         frameCount++;
         TimerLogFPS += Time.unscaledDeltaTime;
         TimerLogResult += Time.unscaledDeltaTime;
@@ -57,22 +54,18 @@ public class FPSLogger : MonoBehaviour
         // Mỗi 1 giây: tính FPS trung bình của 1 giây đó
         if (TimerLogFPS >= TimeLogFPS)
         {
-            float fps = frameCount / TimerLogFPS; // fps trung bình trong 1 giây
+            float fps = frameCount / TimerLogFPS;
             fpsBuffer.Add(fps);
 
             frameCount = 0;
             TimerLogFPS = 0f;
         }
-
-        // Mỗi 10 giây tổng kết
         if (TimerLogResult >= TimeLogResult)
         {
             SaveSummary();
             fpsBuffer.Clear();
             TimerLogResult = 0f;
-
-            if (manager != null)
-                manager.AddBoids(boidStep);
+            manager.AddBoids(boidStep);
         }
     }
 
@@ -84,6 +77,9 @@ public class FPSLogger : MonoBehaviour
         float avg = 0f;
         foreach (float f in fpsBuffer) avg += f;
         avg /= fpsBuffer.Count;
+
+        float fpsmax = fpsBuffer.Max();
+        float fpsmin = fpsBuffer.Min();
 
         // Tính độ lệch chuẩn
         float variance = 0f;
@@ -99,10 +95,13 @@ public class FPSLogger : MonoBehaviour
             sw.WriteLine(string.Join(", ", fpsBuffer.ConvertAll(f => f.ToString("F2"))));
             sw.WriteLine($"numBoid: {boidCount}");
             sw.WriteLine($"FPS Avg: {avg:F2}");
+            sw.WriteLine($"FPS Max: {fpsmax:F2}");
+            sw.WriteLine($"FPS Min: {fpsmin:F2}");
+
             sw.WriteLine($"FPS StdDev: {stdDev:F2}");
             sw.WriteLine();
         }
 
-        Debug.Log($"[Logger] Boids={boidCount}, AvgFPS={avg:F2}, StdDev={stdDev:F2}");
+        Debug.Log($"[Logger] Boids={boidCount}");
     }
 }

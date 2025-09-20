@@ -12,13 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ba872a9be4bdd8489e34eeba8806200, type: 3}
   m_Name: BoidSettings
   m_EditorClassIdentifier: 
-  separationRange: 2
-  alignmentRange: 2.4
-  cohesionRange: 2.5
+  range: 2
   minSpeed: 3
   maxSpeed: 5
   maxSteerForce: 3
   separationWeight: 0.8
   alignWeight: 0.5
-  cohesionWeight: 0.3
+  cohesionWeight: 0.4
   BoundWeight: 7

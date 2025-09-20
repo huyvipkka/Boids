@@ -39,21 +39,28 @@ public class SpatialHash<T>
         list.Add(item);
     }
 
-    public IEnumerable<T> GetNeighbors(Vector2 pos)
+    public List<T> GetNeighbors(Vector2 pos)
     {
         Vector2Int center = Hash(pos);
-            for (int dx = -1; dx <= 1; dx++)
+        List<T> res = new();
+        for (int dx = -1; dx <= 1; dx++)
+        {
+            for (int dy = -1; dy <= 1; dy++)
             {
-                for (int dy = -1; dy <= 1; dy++)
+                Vector2Int neighborCell = new(center.x + dx, center.y + dy);
+                if (cells.TryGetValue(neighborCell, out var list))
                 {
-                    Vector2Int neighborCell = new(center.x + dx, center.y + dy);
-                    if (cells.TryGetValue(neighborCell, out var list))
+                    foreach (var item in list)
                     {
-                        foreach (var item in list)
-                            yield return item;
+                        Vector2 otherPos = getPosition(item);
+                        float dist = Mathf.Max(0.001f, Vector2.Distance(pos, otherPos));
+                        if (dist <= cellSize)
+                            res.Add(item);
                     }
                 }
             }
+        }
+        return res;
     }
 
     public void DrawGizmos()

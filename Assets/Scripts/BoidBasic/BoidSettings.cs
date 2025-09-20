@@ -4,9 +4,7 @@ using UnityEngine;
 public class BoidSettings : ScriptableObject
 {
     [Header("Phạm vi quan sát")]
-    [Range(0.1f, 10f)] public float separationRange = 2f;
-    [Range(0.1f, 10f)] public float alignmentRange = 5f;
-    [Range(0.1f, 10f)] public float cohesionRange = 5f;
+    [Range(0.1f, 10f)] public float range = 2f;
 
     [Header("Tốc độ")]
     [Range(1, 7)] public float minSpeed = 2f;

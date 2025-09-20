@@ -18,7 +18,7 @@ public class JBOLManager : BoidManager
         velocities = new NativeArray<float2>(boidCount, Allocator.Persistent);
         forces = new NativeArray<float2>(boidCount, Allocator.Persistent);
     }
-    protected override void CaculateBoids()
+    protected override void Update()
     {
          for (int i = 0; i < listBoid.Count; i++)
         {
@@ -27,9 +27,7 @@ public class JBOLManager : BoidManager
         }
         BoidSettingsData settingsData = new()
         {
-            separationRange = settings.separationRange,
-            alignmentRange = settings.alignmentRange,
-            cohesionRange = settings.cohesionRange,
+            range = settings.range,
             separationWeight = settings.separationWeight,
             alignWeight = settings.alignWeight,
             cohesionWeight = settings.cohesionWeight

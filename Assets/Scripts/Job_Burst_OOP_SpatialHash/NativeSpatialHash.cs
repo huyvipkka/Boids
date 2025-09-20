@@ -45,7 +45,7 @@ public struct NativeSpatialHash : System.IDisposable
 
         foreach (int2 cell in keys)
         {
-            if (!seen.Add(cell)) continue; // tránh vẽ trùng
+            if (!seen.Add(cell)) continue; 
 
             Vector3 worldPos = new Vector3(cell.x * cellSize, cell.y * cellSize, 0);
             Vector3 size = new Vector3(cellSize, cellSize, 0);

@@ -2,9 +2,7 @@ using Unity.Mathematics;
 
 public struct BoidSettingsData
 {
-    public float separationRange;
-    public float alignmentRange;
-    public float cohesionRange;
+    public float range;
 
     public float separationWeight;
     public float alignWeight;

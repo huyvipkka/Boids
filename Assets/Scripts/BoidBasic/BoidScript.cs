@@ -15,6 +15,7 @@ public class BoidScript : MonoBehaviour
 
     public void ApplyForce(Vector2 force)
     {
+        if (force == Vector2.zero) return;
         if (force.magnitude > settings.maxSteerForce)
             force = force.normalized * settings.maxSteerForce;
         Velocity += force * Time.fixedDeltaTime;
@@ -37,21 +38,19 @@ public class BoidScript : MonoBehaviour
 
     void LookRotation()
     {
-        transform.rotation = Quaternion.Slerp(
-                    transform.rotation,
-                    Quaternion.LookRotation(Velocity),
-                    0.3f);
-
+        if (Velocity.sqrMagnitude > 0.0001f) // tránh zero vector
+        {
+            transform.rotation = Quaternion.Slerp(
+                transform.rotation,
+                Quaternion.LookRotation(new Vector3(Velocity.x, Velocity.y, 0)),
+                0.3f);
+        }
     }
     
     void OnDrawGizmosSelected()
     {
         if (settings == null) return;
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, settings.separationRange);
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, settings.alignmentRange);
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(transform.position, settings.cohesionRange);
+        Gizmos.DrawWireSphere(transform.position, settings.range);
     }
 }
