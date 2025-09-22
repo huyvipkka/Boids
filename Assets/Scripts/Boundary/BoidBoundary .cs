@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BoidBoundary : MonoBehaviour
+public class BoidBoundary : MonoBehaviour, IBoundary
 {
     public static BoidBoundary Instance { get; private set; }
 
@@ -20,13 +20,13 @@ public class BoidBoundary : MonoBehaviour
         Instance = this;
     }
 
-    public Vector3 GetBoundaryWeight(Vector3 boidPos)
+    public Vector2 GetForce(Vector2 boidPos)
     {
-        Vector3 toCenter = transform.position - boidPos;
+        Vector2 toCenter = (Vector2)transform.position - boidPos;
         float distFromCenter = toCenter.magnitude;
 
         if (distFromCenter < boundaryRadius * innerRadiusFactor)
-            return Vector3.zero; 
+            return Vector2.zero; 
 
         // t = 0 khi ở innerRadiusFactor * boundaryRadius, t = 1 khi ở boundaryRadius
         float t = Mathf.InverseLerp(boundaryRadius * innerRadiusFactor, boundaryRadius, distFromCenter);
@@ -36,12 +36,21 @@ public class BoidBoundary : MonoBehaviour
     }
 
     
-    private void OnDrawGizmos()
+    public void DrawGizmos()
     {
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere(transform.position, boundaryRadius);
 
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(transform.position, boundaryRadius * innerRadiusFactor);
+    }
+
+    public Rect GetBoundSize()
+    {
+        float innerRadius = boundaryRadius * innerRadiusFactor;
+        float size = innerRadius * 2f;
+
+        Vector2 center = transform.position;
+        return new Rect(center.x - innerRadius, center.y - innerRadius, size, size);
     }
 }

@@ -20,7 +20,7 @@ public class JBOLManager : BoidManager
     }
     protected override void Update()
     {
-         for (int i = 0; i < listBoid.Count; i++)
+        for (int i = 0; i < listBoid.Count; i++)
         {
             positions[i] = listBoid[i].Position;
             velocities[i] = listBoid[i].Velocity;
@@ -44,9 +44,11 @@ public class JBOLManager : BoidManager
         for (int i = 0; i < listBoid.Count; i++)
         {
             //Debug.Log(forces[i]);
-            float2 boundForce = (float2)cameraBounds.KeepWithinBounds(listBoid[i].Position) * settings.BoundWeight;
+            float2 boundForce = (float2)bound.GetForce(listBoid[i].Position) * settings.BoundWeight;
             listBoid[i].ApplyForce(forces[i] + boundForce);
         }
+
+        AutoAddBoid();
     }
     void OnDestroy()
     {

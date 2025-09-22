@@ -9,14 +9,21 @@ public class BoidManager : MonoBehaviour
     [SerializeField] protected GameObject boidPrefab;
     [SerializeField] protected BoidSettings settings;
     public List<BoidScript> listBoid;
-    public CameraBounds cameraBounds;
+    [SerializeField] protected MonoBehaviour boundComponent;
+
+    // Thuộc tính để lấy interface
+    protected IBoundary bound => boundComponent as IBoundary;
+    protected Rect BoundSize => bound.GetBoundSize();
+
+    [SerializeField] protected bool autoAddBoid = false;
+    [SerializeField] protected int boidStep = 10;
+    [SerializeField] protected int timeSpawn = 5;
 
     protected virtual void Start()
     {
-        cameraBounds = gameObject.AddComponent<CameraBounds>();
-        cameraBounds.Initialize(Camera.main, 5f);
         listBoid = new List<BoidScript>(boidCount);
-        SpawnOnCircle();
+        Spawn();
+        Debug.Log("BoidManager.Start");
     }
 
     protected virtual void Update()
@@ -27,12 +34,24 @@ public class BoidManager : MonoBehaviour
             Vector2 force = CalculateForces(boid, neighbors);
             boid.ApplyForce(force);
         }
+        AutoAddBoid();
+    }
+
+    protected float timer;
+    protected virtual void AutoAddBoid()
+    {
+        if (!autoAddBoid) return;
+        timer += Time.deltaTime;
+        if (timer >= 10f)
+        {
+            timer = 0f;
+            AddBoids();
+        }
     }
 
     protected virtual List<BoidScript> FindNeighbors(BoidScript boid)
     {
-        List<BoidScript> neighbors = new List<BoidScript>();
-
+        List<BoidScript> neighbors = new();
         foreach (BoidScript other in listBoid)
         {
             if (other == boid) continue;
@@ -42,7 +61,6 @@ public class BoidManager : MonoBehaviour
                 neighbors.Add(other);
             }
         }
-
         return neighbors;
     }
 
@@ -78,37 +96,51 @@ public class BoidManager : MonoBehaviour
         if (sepCount > 0) force += separation * settings.separationWeight;
         if (alignCount > 0) force += alignment * settings.alignWeight;
         if (cohesionCount > 0) force += cohesion * settings.cohesionWeight;
-        force += cameraBounds.KeepWithinBounds(boid.Position) * settings.BoundWeight;
+
+        if (force.magnitude > settings.maxSteerForce)
+            force = force.normalized * settings.maxSteerForce;
+        force += bound.GetForce(boid.Position) * settings.BoundWeight;
 
         return force;
     }
 
-    protected virtual void SpawnOnCircle()
+    protected virtual void Spawn()
     {
+        Rect r = new(
+            -10f, -10f, 20, 20
+        );
+
         for (int i = 0; i < boidCount; i++)
         {
-            Vector2 pos = UnityEngine.Random.insideUnitCircle * 20f;
+            float x = UnityEngine.Random.Range(r.xMin, r.xMax);
+            float y = UnityEngine.Random.Range(r.yMin, r.yMax);
+            Vector2 pos = new Vector2(x, y);
+
             GameObject obj = Instantiate(boidPrefab, pos, Quaternion.identity);
             BoidScript b = obj.GetComponent<BoidScript>();
-            b.Velocity = UnityEngine.Random.insideUnitCircle * 2f;
+            b.Velocity = UnityEngine.Random.insideUnitCircle;
             listBoid.Add(b);
         }
     }
-
-    public virtual void AddBoids(int n)
+    protected void AddBoids()
     {
-        for (int i = 0; i < n; i++)
+        Rect r = BoundSize;
+
+        for (int i = 0; i < boidStep; i++)
         {
-            Vector2 pos = UnityEngine.Random.insideUnitCircle * 20f;
+            float x = UnityEngine.Random.Range(r.xMin, r.xMax);
+            float y = UnityEngine.Random.Range(r.yMin, r.yMax);
+            Vector2 pos = new Vector2(x, y);
+
             GameObject obj = Instantiate(boidPrefab, pos, Quaternion.identity);
             BoidScript b = obj.GetComponent<BoidScript>();
-            b.Velocity = UnityEngine.Random.insideUnitCircle * 2f;
+            b.Velocity = UnityEngine.Random.insideUnitCircle;
             listBoid.Add(b);
         }
     }
 
     protected virtual void OnDrawGizmos()
     {
-        cameraBounds?.DrawGizmos();
+        bound?.DrawGizmos();
     }
 }

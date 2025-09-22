@@ -5,8 +5,7 @@ public class BoidQuadTreeManager : BoidManager
 {
 
     [Header("QuadTree Bounds")]
-    [SerializeField] bool useCustomBounds = false;
-    [SerializeField] Rect customBounds = new(-20, -20, 40, 40);
+    [SerializeField] float expandFactor = 0.2f;
 
     private ObjectPool<QuadTree<BoidScript>> quadTreePool;
     private QuadTree<BoidScript> root;
@@ -40,23 +39,25 @@ public class BoidQuadTreeManager : BoidManager
 
     private void ResetQuadtree()
     {
-        Rect worldBounds = useCustomBounds
-            ? customBounds
-            : new Rect(-20, -20, 40, 40); 
+        Vector2 center = BoundSize.center;
+        Vector2 newSize = BoundSize.size * (1 + expandFactor);
+        Rect QuadTreeRect = new(
+            center.x - newSize.x / 2f,
+            center.y - newSize.y / 2f,
+            newSize.x,
+            newSize.y
+        );
 
         root?.ReleaseAll(quadTreePool);
-        root = quadTreePool.Get().Init(worldBounds, 8, 1f, 0, 8);
+        root = quadTreePool.Get().Init(QuadTreeRect, 8, 1f, 0, 8);
+
         foreach (BoidScript b in listBoid)
             root.Insert(b, quadTreePool);
     }
 
+
     protected override void OnDrawGizmos()
     {
-        if (useCustomBounds)
-        {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawWireCube(customBounds.center, customBounds.size);
-        }
         root?.DrawGizmos(Color.cyan);
         base.OnDrawGizmos();
     }

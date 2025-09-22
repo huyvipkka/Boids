@@ -119,6 +119,67 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1001 &750312890
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 570956145008750808, guid: 4cd4835d199ceb74c9529ed84f820080, type: 3}
+      propertyPath: manager
+      value: 
+      objectReference: {fileID: 1456490194}
+    - target: {fileID: 4738256146492192382, guid: 4cd4835d199ceb74c9529ed84f820080, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4738256146492192382, guid: 4cd4835d199ceb74c9529ed84f820080, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4738256146492192382, guid: 4cd4835d199ceb74c9529ed84f820080, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4738256146492192382, guid: 4cd4835d199ceb74c9529ed84f820080, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4738256146492192382, guid: 4cd4835d199ceb74c9529ed84f820080, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4738256146492192382, guid: 4cd4835d199ceb74c9529ed84f820080, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4738256146492192382, guid: 4cd4835d199ceb74c9529ed84f820080, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4738256146492192382, guid: 4cd4835d199ceb74c9529ed84f820080, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4738256146492192382, guid: 4cd4835d199ceb74c9529ed84f820080, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4738256146492192382, guid: 4cd4835d199ceb74c9529ed84f820080, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5293278633776751910, guid: 4cd4835d199ceb74c9529ed84f820080, type: 3}
+      propertyPath: m_Name
+      value: DensityBoundary
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 4cd4835d199ceb74c9529ed84f820080, type: 3}
 --- !u!1001 &943108149
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -176,6 +237,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ab7ef969d472f354fa868979b3880027, type: 3}
+--- !u!114 &1188087236 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 570956145008750808, guid: 4cd4835d199ceb74c9529ed84f820080, type: 3}
+  m_PrefabInstance: {fileID: 750312890}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7f35db8fc82473458bfd53ba195ccea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1456490193
 GameObject:
   m_ObjectHideFlags: 0
@@ -205,18 +277,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f495e9a10770be748a38e8022e89e4f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boidCount: 50
+  boidCount: 200
   boidPrefab: {fileID: 1401781204145003117, guid: 524dde6a7b73dfc4bb5c8141731b5748, type: 3}
   settings: {fileID: 11400000, guid: 653487933315603479dcb7c343cb8e60, type: 2}
   listBoid: []
-  cameraBounds: {fileID: 0}
-  useCustomBounds: 1
-  customBounds:
-    serializedVersion: 2
-    x: -20
-    y: -15
-    width: 40
-    height: 30
+  boundComponent: {fileID: 1188087236}
+  autoAddBoid: 1
+  boidStep: 10
+  timeSpawn: 5
+  expandFactor: 0.4
 --- !u!4 &1456490195
 Transform:
   m_ObjectHideFlags: 0
@@ -407,7 +476,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 10
+  orthographic size: 40
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -447,3 +516,4 @@ SceneRoots:
   - {fileID: 1728115643}
   - {fileID: 943108149}
   - {fileID: 1719682209}
+  - {fileID: 750312890}

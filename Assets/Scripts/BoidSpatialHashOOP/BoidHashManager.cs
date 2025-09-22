@@ -30,6 +30,6 @@ public class BoidHashManager : BoidManager
     protected override void OnDrawGizmos()
     {
         spatialHash?.DrawGizmos();
-        cameraBounds?.DrawGizmos();
+        base.OnDrawGizmos();
     }
 }

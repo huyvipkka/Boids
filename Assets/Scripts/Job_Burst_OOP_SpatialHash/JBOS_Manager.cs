@@ -13,7 +13,6 @@ public class JBOS_Manager : BoidManager
     protected override void Start()
     {
         base.Start();
-
         positions = new NativeArray<float2>(boidCount + 5000, Allocator.Persistent);
         velocities = new NativeArray<float2>(boidCount + 5000, Allocator.Persistent);
         forces = new NativeArray<float2>(boidCount + 5000, Allocator.Persistent);
@@ -54,9 +53,11 @@ public class JBOS_Manager : BoidManager
 
         for (int i = 0; i < listBoid.Count; i++)
         {
-            float2 boundForce = (float2)cameraBounds.KeepWithinBounds(listBoid[i].Position) * settings.BoundWeight;
+            float2 boundForce = (float2)bound.GetForce(listBoid[i].Position) * settings.BoundWeight;
             listBoid[i].ApplyForce(forces[i] + boundForce);
         }
+
+        AutoAddBoid();
     }
 
 
@@ -73,7 +74,7 @@ public class JBOS_Manager : BoidManager
         if (Application.isPlaying)
         {
             spatialHash.DrawGizmos();
-            cameraBounds?.DrawGizmos();
+            base.OnDrawGizmos();
         }
     }
 }

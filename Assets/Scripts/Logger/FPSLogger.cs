@@ -14,7 +14,6 @@ public class FPSLogger : MonoBehaviour
     public float TimeLogResult = 10;
     private float TimerLogResult = 0f;
     public float warmupTimer = 5f;  // 5s warmup
-    public int boidStep = 10;
 
     private string logPath;
     private string fileName;
@@ -65,7 +64,6 @@ public class FPSLogger : MonoBehaviour
             SaveSummary();
             fpsBuffer.Clear();
             TimerLogResult = 0f;
-            manager.AddBoids(boidStep);
         }
     }
 

@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8241139280395090976}
-  - component: {fileID: 391316749989296156}
+  - component: {fileID: 4005178321583325949}
   m_Layer: 0
-  m_Name: FPS Logeer
+  m_Name: Logeer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32,7 +32,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &391316749989296156
+--- !u!114 &4005178321583325949
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,7 +41,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 8358081860992307164}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4a32188c92f7d7d4195b4096d21d0155, type: 3}
+  m_Script: {fileID: 11500000, guid: 0fa089b1274b6594a959c883a904cf04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  durationSeconds: 20
+  boidManager: {fileID: 0}
+  boidStep: 10
+  flushTime: 15

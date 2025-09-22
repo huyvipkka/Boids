@@ -19,4 +19,4 @@ MonoBehaviour:
   separationWeight: 0.8
   alignWeight: 0.5
   cohesionWeight: 0.4
-  BoundWeight: 7
+  BoundWeight: 8

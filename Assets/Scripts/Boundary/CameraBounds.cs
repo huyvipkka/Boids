@@ -1,30 +1,26 @@
 using UnityEngine;
 
-public class CameraBounds : MonoBehaviour
+public class CameraBounds : MonoBehaviour, IBoundary
 {
     public Camera cam { get; private set; }
-    private float margin;
+    [SerializeField] float margin = 3;
+
     private static Vector3 vt11 = new(1, 1, 0);
-    public void Initialize(Camera cam, float margin = 5f)
+
+    private Rect boundRect;
+
+    void Start()
     {
-        this.cam = cam;
-        this.margin = margin;
+        cam = Camera.main;
+        UpdateBound();
     }
 
-    public Vector2 KeepWithinBounds(Vector2 pos)
+    void LateUpdate()
     {
-        Vector2 min = cam.ViewportToWorldPoint(Vector3.zero);
-        Vector2 max = cam.ViewportToWorldPoint(vt11);
-        Vector2 direction = Vector2.zero;
-
-        if (pos.x < min.x + margin) direction.x = 1;
-        if (pos.x > max.x - margin) direction.x = -1;
-        if (pos.y < min.y + margin) direction.y = 1;
-        if (pos.y > max.y - margin) direction.y = -1;
-
-        return direction.normalized;
+        UpdateBound();
     }
-    public void DrawGizmos()
+
+    private void UpdateBound()
     {
         Vector2 min = cam.ViewportToWorldPoint(Vector3.zero);
         Vector2 max = cam.ViewportToWorldPoint(vt11);
@@ -32,7 +28,29 @@ public class CameraBounds : MonoBehaviour
         min += Vector2.one * margin;
         max -= Vector2.one * margin;
 
+        boundRect = new Rect(min.x, min.y, max.x - min.x, max.y - min.y);
+    }
+
+    public Rect GetBoundSize()
+    {
+        return boundRect;
+    }
+
+    public Vector2 GetForce(Vector2 pos)
+    {
+        Vector2 direction = Vector2.zero;
+
+        if (pos.x < boundRect.xMin) direction.x = 1;
+        if (pos.x > boundRect.xMax) direction.x = -1;
+        if (pos.y < boundRect.yMin) direction.y = 1;
+        if (pos.y > boundRect.yMax) direction.y = -1;
+
+        return direction.normalized;
+    }
+
+    public void DrawGizmos()
+    {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireCube((min + max) / 2f, max - min);
+        Gizmos.DrawWireCube(boundRect.center, boundRect.size);
     }
 }
