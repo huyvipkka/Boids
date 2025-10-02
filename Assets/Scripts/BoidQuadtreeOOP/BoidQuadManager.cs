@@ -58,7 +58,7 @@ public class BoidQuadTreeManager : BoidManager
 
     protected override void OnDrawGizmos()
     {
-        root?.DrawGizmos(Color.cyan);
+        root?.DrawGizmos();
         base.OnDrawGizmos();
     }
 }

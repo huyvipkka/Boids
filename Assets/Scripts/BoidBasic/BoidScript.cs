@@ -16,7 +16,6 @@ public class BoidScript : MonoBehaviour
     public void ApplyForce(Vector2 force)
     {
         if (force == Vector2.zero) return;
-        
         Velocity += force * Time.fixedDeltaTime;
     }
 

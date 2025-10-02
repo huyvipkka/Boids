@@ -42,7 +42,7 @@ public class BoidManager : MonoBehaviour
     {
         if (!autoAddBoid) return;
         timer += Time.deltaTime;
-        if (timer >= 10f)
+        if (timer >= timeSpawn)
         {
             timer = 0f;
             AddBoids();
@@ -97,6 +97,7 @@ public class BoidManager : MonoBehaviour
         if (alignCount > 0) force += alignment * settings.alignWeight;
         if (cohesionCount > 0) force += cohesion * settings.cohesionWeight;
 
+        if (bound == null) return force;
         if (force.magnitude > settings.maxSteerForce)
             force = force.normalized * settings.maxSteerForce;
         force += bound.GetForce(boid.Position) * settings.BoundWeight;
@@ -115,6 +116,22 @@ public class BoidManager : MonoBehaviour
             float x = UnityEngine.Random.Range(r.xMin, r.xMax);
             float y = UnityEngine.Random.Range(r.yMin, r.yMax);
             Vector2 pos = new Vector2(x, y);
+
+            GameObject obj = Instantiate(boidPrefab, pos, Quaternion.identity);
+            BoidScript b = obj.GetComponent<BoidScript>();
+            b.Velocity = UnityEngine.Random.insideUnitCircle;
+            listBoid.Add(b);
+        }
+    }
+    public virtual void AddBoids(int n)
+    {
+        Rect r = BoundSize;
+
+        for (int i = 0; i < n; i++)
+        {
+            float x = UnityEngine.Random.Range(r.xMin, r.xMax);
+            float y = UnityEngine.Random.Range(r.yMin, r.yMax);
+            Vector2 pos = new(x, y);
 
             GameObject obj = Instantiate(boidPrefab, pos, Quaternion.identity);
             BoidScript b = obj.GetComponent<BoidScript>();

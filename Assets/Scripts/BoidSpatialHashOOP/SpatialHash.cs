@@ -66,7 +66,7 @@ public class SpatialHash<T>
     public void DrawGizmos()
     {
 
-        Gizmos.color = Color.green;
+        Gizmos.color = Color.white;
         foreach (var k in cells) 
         {
             Vector2Int cell = k.Key;

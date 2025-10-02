@@ -132,15 +132,15 @@ public class QuadTree<T>
         pool.Release(this);
     }
 
-    public void DrawGizmos(Color? color = null)
+    public void DrawGizmos()
     {
-        Gizmos.color = color ?? Color.green;
+        Gizmos.color = Color.white;
         Gizmos.DrawWireCube(Bounds.center, Bounds.size);
         if (IsDivided)
         {
             foreach (var child in _children)
             {
-                child?.DrawGizmos(color);
+                child?.DrawGizmos();
             }
         }
     }

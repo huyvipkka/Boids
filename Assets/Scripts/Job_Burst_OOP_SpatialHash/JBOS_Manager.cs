@@ -13,9 +13,9 @@ public class JBOS_Manager : BoidManager
     protected override void Start()
     {
         base.Start();
-        positions = new NativeArray<float2>(boidCount + 5000, Allocator.Persistent);
-        velocities = new NativeArray<float2>(boidCount + 5000, Allocator.Persistent);
-        forces = new NativeArray<float2>(boidCount + 5000, Allocator.Persistent);
+        positions = new NativeArray<float2>(8000, Allocator.Persistent);
+        velocities = new NativeArray<float2>(8000, Allocator.Persistent);
+        forces = new NativeArray<float2>(8000, Allocator.Persistent);
         float cellSize = settings.range;
         spatialHash = new(boidCount * 2, cellSize, Allocator.Persistent);
     }

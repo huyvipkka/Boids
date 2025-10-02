@@ -14,9 +14,9 @@ public class JBOLManager : BoidManager
     {
         base.Start();
 
-        positions = new NativeArray<float2>(boidCount, Allocator.Persistent);
-        velocities = new NativeArray<float2>(boidCount, Allocator.Persistent);
-        forces = new NativeArray<float2>(boidCount, Allocator.Persistent);
+        positions = new NativeArray<float2>(6000, Allocator.Persistent);
+        velocities = new NativeArray<float2>(6000, Allocator.Persistent);
+        forces = new NativeArray<float2>(6000, Allocator.Persistent);
     }
     protected override void Update()
     {

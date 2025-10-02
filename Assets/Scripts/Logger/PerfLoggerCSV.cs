@@ -9,6 +9,8 @@ public class PerfLoggerCSV : MonoBehaviour
 {
     [SerializeField] private BoidManager boidManager;
     [SerializeField] private int flushTime = 10;
+    [SerializeField] bool autoAddBoid = false;
+    [SerializeField] int boidStep = 10;
 
     private StreamWriter writer;
     private float flushTimer = 0f;
@@ -71,10 +73,10 @@ public class PerfLoggerCSV : MonoBehaviour
             int boidCount = boidManager.listBoid.Count;
 
             double cpuMainMs = GetRecorderFrameAverage(cpuMain) * 1e-6f;
-            double dcAvg     = GetRecorderFrameAverage(drawCalls);
-            double batchAvg  = GetRecorderFrameAverage(batches);
-            double trisAvg   = GetRecorderFrameAverage(tris);
-            double vertsAvg  = GetRecorderFrameAverage(verts);
+            double dcAvg = GetRecorderFrameAverage(drawCalls);
+            double batchAvg = GetRecorderFrameAverage(batches);
+            double trisAvg = GetRecorderFrameAverage(tris);
+            double vertsAvg = GetRecorderFrameAverage(verts);
 
             // --- BoidCount lên đầu ---
             writer.WriteLine($"{boidCount},{Time.frameCount},{fpsCurrent},{fpsAvg},{fpsMin},{fpsMax}," +
@@ -82,6 +84,8 @@ public class PerfLoggerCSV : MonoBehaviour
             writer.Flush();
             fpsList.Clear();
             flushTimer = 0f;
+
+            if (autoAddBoid) boidManager.AddBoids(boidStep);
         }
     }
 

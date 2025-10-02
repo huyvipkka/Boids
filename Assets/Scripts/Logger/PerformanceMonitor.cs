@@ -5,6 +5,14 @@ using UnityEngine;
 
 public class PerformanceMonitor : MonoBehaviour
 {
+    [Header("UI")]
+    [Tooltip("Kích thước chữ hiển thị trên màn hình")]
+    public int fontSize = 22;
+    [Tooltip("Màu chữ hiển thị trên màn hình")]
+    public Color fontColor = Color.white;
+    [Tooltip("Vị trí và kích thước hộp hiển thị (x, y, width, height)")]
+    public Rect displayRect = new Rect(10, 10, 600, 400);
+
     string statsText;
 
     ProfilerRecorder mainThreadTimeRecorder;
@@ -13,16 +21,18 @@ public class PerformanceMonitor : MonoBehaviour
     ProfilerRecorder trianglesRecorder;
     ProfilerRecorder verticesRecorder;
 
+    // fps
     float fpsTimer;
     int frames;
     float fps;
 
     static double GetRecorderFrameAverage(ProfilerRecorder recorder)
     {
-        var samplesCount = recorder.Capacity;
-        if (samplesCount == 0)
+        // Nếu recorder chưa khởi tạo hoặc không có mẫu, trả 0
+        if (!recorder.Valid || recorder.Count == 0)
             return 0;
 
+        var samplesCount = recorder.Count;
         double r = 0;
         unsafe
         {
@@ -38,26 +48,27 @@ public class PerformanceMonitor : MonoBehaviour
 
     void OnEnable()
     {
+        // Lưu ý: tên mục ghi có thể khác giữa các phiên Unity / platform.
         mainThreadTimeRecorder = ProfilerRecorder.StartNew(ProfilerCategory.Internal, "Main Thread", 15);
 
         drawCallsRecorder = ProfilerRecorder.StartNew(ProfilerCategory.Render, "Draw Calls Count", 15);
         batchesRecorder = ProfilerRecorder.StartNew(ProfilerCategory.Render, "Batches Count", 15);
         trianglesRecorder = ProfilerRecorder.StartNew(ProfilerCategory.Render, "Triangles Count", 15);
         verticesRecorder = ProfilerRecorder.StartNew(ProfilerCategory.Render, "Vertices Count", 15);
-
     }
 
     void OnDisable()
     {
-        mainThreadTimeRecorder.Dispose();
-        drawCallsRecorder.Dispose();
-        batchesRecorder.Dispose();
-        trianglesRecorder.Dispose();
-        verticesRecorder.Dispose();
+        if (mainThreadTimeRecorder.Valid) mainThreadTimeRecorder.Dispose();
+        if (drawCallsRecorder.Valid) drawCallsRecorder.Dispose();
+        if (batchesRecorder.Valid) batchesRecorder.Dispose();
+        if (trianglesRecorder.Valid) trianglesRecorder.Dispose();
+        if (verticesRecorder.Valid) verticesRecorder.Dispose();
     }
 
     void Update()
     {
+        // Cập nhật FPS
         frames++;
         fpsTimer += Time.unscaledDeltaTime;
         if (fpsTimer >= 1f)
@@ -66,9 +77,14 @@ public class PerformanceMonitor : MonoBehaviour
             frames = 0;
             fpsTimer = 0f;
         }
-        var sb = new StringBuilder(500);
 
-        sb.AppendLine($"Main Thread: {GetRecorderFrameAverage(mainThreadTimeRecorder) * 1e-6f:F2} ms");
+        var sb = new StringBuilder(600);
+
+        sb.AppendLine($"FPS: {fps:F1}");
+        // Main Thread time recorder thường trả giá trị tính bằng nanoseconds -> chuyển sang ms
+        var mainThreadMs = GetRecorderFrameAverage(mainThreadTimeRecorder) * 1e-6f;
+        sb.AppendLine($"Main Thread: {mainThreadMs:F2} ms");
+
         sb.AppendLine($"Draw Calls: {GetRecorderFrameAverage(drawCallsRecorder):F0}");
         sb.AppendLine($"Batches: {GetRecorderFrameAverage(batchesRecorder):F0}");
         sb.AppendLine($"Triangles: {GetRecorderFrameAverage(trianglesRecorder):F0}");
@@ -79,6 +95,17 @@ public class PerformanceMonitor : MonoBehaviour
 
     void OnGUI()
     {
-        GUI.Label(new Rect(10, 10, 500, 500), statsText);
+        if (string.IsNullOrEmpty(statsText))
+            return;
+
+        var style = new GUIStyle(GUI.skin.label)
+        {
+            fontSize = Mathf.Max(8, fontSize),
+            wordWrap = false,
+            richText = false
+        };
+        style.normal.textColor = fontColor;
+
+        GUI.Label(displayRect, statsText, style);
     }
 }

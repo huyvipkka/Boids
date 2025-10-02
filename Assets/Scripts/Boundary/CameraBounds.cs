@@ -3,54 +3,45 @@ using UnityEngine;
 public class CameraBounds : MonoBehaviour, IBoundary
 {
     public Camera cam { get; private set; }
-    [SerializeField] float margin = 3;
+    [SerializeField] private float margin;
 
-    private static Vector3 vt11 = new(1, 1, 0);
-
-    private Rect boundRect;
-
-    void Start()
+    public void Start()
     {
-        cam = Camera.main;
-        UpdateBound();
-    }
-
-    void LateUpdate()
-    {
-        UpdateBound();
-    }
-
-    private void UpdateBound()
-    {
-        Vector2 min = cam.ViewportToWorldPoint(Vector3.zero);
-        Vector2 max = cam.ViewportToWorldPoint(vt11);
-
-        min += Vector2.one * margin;
-        max -= Vector2.one * margin;
-
-        boundRect = new Rect(min.x, min.y, max.x - min.x, max.y - min.y);
+        this.cam = Camera.main;
     }
 
     public Rect GetBoundSize()
     {
-        return boundRect;
+        float zDist = Mathf.Abs(cam.transform.position.z);
+        Vector3 bl = cam.ViewportToWorldPoint(new Vector3(0f, 0f, zDist));
+        Vector3 tr = cam.ViewportToWorldPoint(new Vector3(1f, 1f, zDist));
+        Vector2 min = (Vector2)bl + Vector2.one * margin;
+        Vector2 max = (Vector2)tr - Vector2.one * margin;
+        return new Rect(min.x, min.y, max.x - min.x, max.y - min.y);
     }
 
     public Vector2 GetForce(Vector2 pos)
     {
-        Vector2 direction = Vector2.zero;
+        Rect bound = GetBoundSize();
+        if (bound.Contains(pos))
+            return Vector2.zero;
+        float clampedX = Mathf.Clamp(pos.x, bound.xMin, bound.xMax);
+        float clampedY = Mathf.Clamp(pos.y, bound.yMin, bound.yMax);
+        Vector2 nearest = new(clampedX, clampedY);
 
-        if (pos.x < boundRect.xMin) direction.x = 1;
-        if (pos.x > boundRect.xMax) direction.x = -1;
-        if (pos.y < boundRect.yMin) direction.y = 1;
-        if (pos.y > boundRect.yMax) direction.y = -1;
-
-        return direction.normalized;
+        return (nearest - pos).normalized;
     }
 
     public void DrawGizmos()
     {
+        Rect bound = GetBoundSize();
         Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(boundRect.center, boundRect.size);
+        Gizmos.DrawWireCube(bound.center, bound.size);
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (cam == null) cam = Camera.main;
+        DrawGizmos();
     }
 }

@@ -45,5 +45,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boidManager: {fileID: 0}
-  boidStep: 10
   flushTime: 15
+  autoAddBoid: 1
+  boidStep: 10

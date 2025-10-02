@@ -11,11 +11,11 @@ public class BoidSettings : ScriptableObject
     [Range(2, 15)] public float maxSpeed = 6f;
 
     [Header("Lực tác dụng tối đa lên boid")]
-    [SerializeField] public float maxSteerForce = 4f;
+    [SerializeField] public float maxSteerForce = 3f;
 
     [Header("Hệ số các quy tắc")]
-    [Range(0, 5f)] public float separationWeight = 0.05f;
-    [Range(0, 5f)] public float alignWeight = 0.05f;
-    [Range(0, 5f)] public float cohesionWeight = 0.005f;
-    [Range(0, 100)] public int BoundWeight = 10;
+    [Range(0, 5f)] public float separationWeight = 0.8f;
+    [Range(0, 5f)] public float alignWeight = 0.4f;
+    [Range(0, 5f)] public float cohesionWeight = 0.4f;
+    [Range(0, 100)] public int BoundWeight = 5;
 }

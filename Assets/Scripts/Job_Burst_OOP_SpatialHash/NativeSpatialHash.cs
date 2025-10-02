@@ -38,7 +38,7 @@ public struct NativeSpatialHash : System.IDisposable
 
     public void DrawGizmos()
     {
-        Gizmos.color = Color.green;
+        Gizmos.color = Color.white;
 
         var keys = map.GetKeyArray(Allocator.Temp);
         var seen = new NativeHashSet<int2>(keys.Length, Allocator.Temp);
@@ -52,7 +52,6 @@ public struct NativeSpatialHash : System.IDisposable
 
             Gizmos.DrawWireCube(worldPos + size * 0.5f, size);
         }
-
         keys.Dispose();
         seen.Dispose();
     }
